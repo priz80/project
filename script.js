@@ -17,9 +17,27 @@ console.log(screens);
 console.log(screens.split(", "));
 console.log("Процент отката посреднику за работу" + " " + fullPrice * (rollback / 100));
 
-document.getElementById("title-container").innerText = title;
-document.getElementById("screens-container").innerText = screens;
-document.getElementById("screenPrice-container").innerText = screenPrice;
-document.getElementById("rollback-container").innerText = rollback;
-document.getElementById("fullPrice-container").innerText = fullPrice;
-document.getElementById("adaptive-container").innerText = adaptive;
+title = prompt("Как называется ваш проект?");
+screens = prompt("Какие типы экранов нужно разработать? (пример: Простые, Сложные, Интерактивные)");
+screenPrice = prompt("Сколько будет стоить данная работа?");
+adaptive = confirm("Нужен ли адаптив на сайте?");
+let service1 = prompt("Какой дополнительный тип услуги нужен?");
+let servicePrice1 = prompt("Сколько это будет стоить?");
+let service2 = prompt("Какой дополнительный тип услуги нужен?");
+let servicePrice2 = prompt("Сколько это будет стоить?");
+
+fullPrice = screenPrice + servicePrice1 + servicePrice2;
+
+let servicePercentPrice = Math.ceil(fullPrice - (fullPrice / 10));
+
+if (fullPrice > 30000) {
+    servicePercentPrice -= servicePercentPrice/10; 
+} else if (fullPrice > 15000 && fullPrice <= 30000 ){
+    servicePercentPrice -= servicePercentPrice/20; 
+} else if (fullPrice >= 0 && fullPrice <= 15000 ){
+    console.log("Скидка не предусмотрена");
+} else if (fullPrice < 0 ){
+    console.log("Что то пошло не так");
+}
+
+console.log(servicePercentPrice);
