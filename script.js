@@ -17,3 +17,9 @@ console.log(screens);
 console.log(screens.split(", "));
 console.log("Процент отката посреднику за работу" + " " + fullPrice * (rollback / 100));
 
+document.getElementById("title-container").innerText = title;
+document.getElementById("screens-container").innerText = screens;
+document.getElementById("screenPrice-container").innerText = screenPrice;
+document.getElementById("rollback-container").innerText = rollback;
+document.getElementById("fullPrice-container").innerText = fullPrice;
+document.getElementById("adaptive-container").innerText = adaptive;
