@@ -107,5 +107,5 @@ console.log(
   getServicePercentPrices(),
 );
 
-console.log("СТоимость верстки экранов " + screenPrice + " руб");
-console.log("СТоимость разработки сайта " + fullPrice + " руб");
+console.log("Стоимость верстки экранов " + screenPrice + " руб");
+console.log("Стоимость разработки сайта " + fullPrice + " руб");
