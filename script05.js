@@ -13,6 +13,7 @@ let service1;
 let service2;
 
 const isNumber = function (num) {
+  num = num.trim();
   return !isNaN(parseFloat(num) && isFinite(num));
 };
 
@@ -37,18 +38,24 @@ const getAllServicePrices = function () {
   let servicePrice2;
   for (let i = 0; i < 2; i++) {
     if (i === 0) {
-      service1 = prompt("Какой дополнительный тип услуги нужен?");
+      service1 = prompt(
+        "Какой дополнительный тип услуги нужен?",
+        "Отправка форм",
+      );
       servicePrice1 = prompt("Сколько это будет стоить?");
       while (!isNumber(servicePrice1)) {
         servicePrice1 = prompt("Сколько это будет стоить?");
       }
     } else if (i === 1) {
-      service2 = prompt("Какой дополнительный тип услуги нужен?");
+      service2 = prompt(
+        "Какой дополнительный тип услуги нужен?",
+        "Продвижение",
+      );
       servicePrice2 = prompt("Сколько это будет стоить?");
       while (!isNumber(servicePrice2)) {
         servicePrice2 = prompt("Сколько это будет стоить?");
       }
-      return servicePrice1 + servicePrice2;
+      return +servicePrice1 + +servicePrice2;
     }
   }
 };
@@ -57,7 +64,7 @@ const showTypeOf = function (variable) {
 };
 
 const getFullPrice = function () {
-  return screenPrice + allServicePrices;
+  return +screenPrice + allServicePrices;
 };
 
 const getServicePercentPrices = function () {
@@ -79,7 +86,7 @@ const getRollbackMessage = (price) => {
 const getTitle = () => {
   title = title.trimStart();
   if (title.length === 0) return "";
-  title = title.charAt(0).toUpperCase() + title.slice(1);
+  return title.charAt(0).toUpperCase() + title.slice(1);
   // return title.trim()[0].toUpperCase() + title.trim().substr(1).toLowerCase()
 };
 
