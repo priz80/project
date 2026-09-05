@@ -38,7 +38,6 @@ function createGame() {
             alert("Поздравляю, Вы угадали!!!");
         }
     }
-
     play();
 }
 
