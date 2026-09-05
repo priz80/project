@@ -4,7 +4,6 @@ let title;
 let screens;
 let screenPrice;
 let adaptive;
-
 let rollback = 10;
 let fullPrice;
 let allServicePrices;
@@ -29,7 +28,7 @@ const asking = function () {
     "Какие типы экранов нужно разработать? (пример: Простые, Сложные, Интерактивные)",
     "Простые, Сложные",
   );
-  
+
   do {
     screenPrice = prompt("Сколько будет стоить данная работа?");
   } while (!isNumber(screenPrice))
