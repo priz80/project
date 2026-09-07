@@ -1,91 +1,88 @@
-"use strict";
+"use strict"
 
 const appData = {
   title: " ",
-  screens: " ",
+  screens: [],
   screenPrice: 0,
   adaptive: true,
   rollback: 10,
   allServicePrices: 0,
-  fillPrice: 0,
+  fullPrice: 0,
   servicePercentPrice: 0,
-  service1: " ",
-  service2: " ",
-  start: function () {
-    appData.asking();
-    appData.allServicePrices = appData.getAllServicePrices();
-    appData.fillPrice = appData.getFullPrice();
-    appData.servicePercentPrice = appData.getServicePrcentPrice();
-    appData.title = appData.getTitle();
+  services: {},
 
-    appData.logger();
+  start: function () {
+    appData.asking()
+    appData.getAllServicePrices()
+    appData.getFullPrice()
+    appData.getServicePercentPrice()
+    appData.getTitle()
+
+    appData.logger()
   },
   isNumber: function (num) {
-    return !isNaN(parseFloat(num)) && isFinite(num);
+    return !isNaN(parseFloat(num)) && isFinite(num)
   },
   asking: function () {
-    appData.title = prompt("Как называется Ваш проект?", "Калькулятор верстки");
-    appData.screens = prompt(
-      "Какие типы экранов нужно разработать",
-      "Простые, Сложные",
-    );
-
-    do {
-      appData.screenPrice = prompt("Сколько будет стоить данная работа?");
-    } while (!appData.isNumber(appData.screenPrice));
-
-    appData.adaptive = confirm("Нужен ли адаптив на сайте?");
-  },
-  getAllServicePrices: function () {
-    let sum = 0;
+    appData.title = prompt("Как называется Ваш проект?", "Калькулятор верстки")
 
     for (let i = 0; i < 2; i++) {
-      let price = 0;
-
-      if (i === 0) {
-        appData.service1 = prompt("Какой дополнительный тип услуги нужен?");
-      } else if (i === 1) {
-        appData.service2 = prompt("Какой дополнительный тип услуги нужен?");
-      }
+      let name = prompt("Какие типы экранов нужно разработать?")
+      let price = 0
 
       do {
-        price = prompt("Сколько это будет стоить?");
-      } while (!appData.isNumber(price));
+        price = prompt("Сколько будет стоить данная работа?")
+      } while (!appData.isNumber(price)); // Здесь точка с запятой обязательна синтаксисом do-while
 
-      sum += +price;
+      appData.screens.push({id: i, name: name, price: price})
     }
 
-    return sum;
+    for (let i = 0; i < 2; i++) {
+      let name = prompt("Какой дополнительный тип услуги нужен?")
+      let price = 0
+
+      do {
+        price = prompt("Сколько это будет стоить?")
+      } while (!appData.isNumber(price)); // Здесь тоже нужна
+
+      appData.services[name] = +price
+    }
+
+    appData.adaptive = confirm("Нужен ли адаптив на сайте?")
+  },
+  getAllServicePrices: function () {
+    for (let key in appData.services) {
+      appData.allServicePrices += appData.services[key]
+    }
   },
   getFullPrice: function () {
-    return +appData.screenPrice + appData.allServicePrices;
+    appData.fullPrice = +appData.screenPrice + appData.allServicePrices
   },
-  getServicePrcentPrice: function () {
-    return (
-      appData.getFullPrice - appData.getFullPrice * (appData.rollback / 100)
-    );
+  getServicePercentPrice: function () {
+    appData.servicePercentPrice = appData.fullPrice - (appData.fullPrice * (appData.rollback / 100))
   },
   getTitle: function () {
-    return (
+    appData.title =
       appData.title.trim()[0].toUpperCase() +
-      appData.title.trim().substr(1).toLowerCase()
-    );
+      appData.title.trim().slice(1).toLowerCase()
   },
   getRollbackMessage: function (price) {
     if (price >= 30000) {
-      return "Даем скидку в 10%";
+      return "Даем скидку в 10%"
     } else if (price >= 15000 && price < 30000) {
-      return "Даем скидку в 5%";
+      return "Даем скидку в 5%"
     } else if (price >= 0 && price < 15000) {
-      return "Скидка не предусмотрена";
+      return "Скидка не предусмотрена"
     } else {
-      return "Что то пошло не так";
+      return "Что то пошло не так"
     }
   },
   logger: function () {
-    console.log(appData.getFullPrice);
+    // Исправление: вызов функции, а не ссылка на неё
+    console.log(appData.fullPrice); 
     console.log(appData.servicePercentPrice);
+    console.log(appData.screens);
   },
-};
+}
 
-appData.start();
+appData.start() // Точка с запятой здесь желательна
