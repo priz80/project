@@ -20,36 +20,61 @@ const appData = {
 
     appData.logger()
   },
-  isNumber: function (num) {
-    return !isNaN(parseFloat(num)) && isFinite(num)
+  isPureNumber: function (str) {
+    return /^\d+$/.test(str);
+  },
+  validateString: function (str) {
+    if (!str || str.trim() === "") return false;
+    if (appData.isPureNumber(str.trim())) return false;
+    return true;
+  },
+  validateNumber: function (str) {
+    return !isNaN(parseFloat(str)) && isFinite(str) && str.trim() !== "";
   },
   asking: function () {
-    appData.title = prompt("Как называется Ваш проект?", "Калькулятор верстки")
+    let titleInput;
+    do {
+      titleInput = prompt("Как называется Ваш проект?", "Калькулятор верстки");
+    } while (!appData.validateString(titleInput));
 
+    appData.title = titleInput.trim();
+    
     for (let i = 0; i < 2; i++) {
-      let name = prompt("Какие типы экранов нужно разработать?")
-      let price = 0
-
+      let nameInput;
       do {
-        price = prompt("Сколько будет стоить данная работа?")
-      } while (!appData.isNumber(price)); // Здесь точка с запятой обязательна синтаксисом do-while
+        nameInput = prompt(`Какие типы экранов нужно разработать? (Экран ${i + 1})`);
+      } while (!appData.validateString(nameInput));
 
-      appData.screens.push({id: i, name: name, price: price})
+      let priceInput;
+      let price = 0;
+      do {
+        priceInput = prompt(`Сколько будет стоить данная работа? (Экран ${i + 1})`);
+      } while (!appData.validateNumber(priceInput));
+      
+      price = +priceInput;
+
+      appData.screens.push({ id: i, name: nameInput, price: price });
     }
 
     for (let i = 0; i < 2; i++) {
-      let name = prompt("Какой дополнительный тип услуги нужен?")
-      let price = 0
-
+      let serviceNameInput;
       do {
-        price = prompt("Сколько это будет стоить?")
-      } while (!appData.isNumber(price)); // Здесь тоже нужна
+        serviceNameInput = prompt(`Какой дополнительный тип услуги нужен? (Услуга ${i + 1})`);
+      } while (!appData.validateString(serviceNameInput));
 
-      appData.services[name] = +price
+      let servicePriceInput;
+      let servicePrice = 0;
+      do {
+        servicePriceInput = prompt(`Сколько это будет стоить? (Услуга ${i + 1})`);
+      } while (!appData.validateNumber(servicePriceInput));
+      
+      servicePrice = +servicePriceInput;
+
+      appData.services[serviceNameInput] = servicePrice;
     }
 
-    appData.adaptive = confirm("Нужен ли адаптив на сайте?")
-  },
+    appData.adaptive = confirm("Нужен ли адаптив на сайте?");
+  },  
   addPrices: function() {
         for (let screen of appData.screens) {
       appData.screenPrice += +screen.price
@@ -82,11 +107,11 @@ const appData = {
     }
   },
   logger: function () {
-    // Исправление: вызов функции, а не ссылка на неё
     console.log(appData.fullPrice); 
     console.log(appData.servicePercentPrice);
     console.log(appData.screens);
+    console.log(appData.services);
   },
 }
 
-appData.start() // Точка с запятой здесь желательна
+appData.start()
