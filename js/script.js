@@ -1,5 +1,27 @@
 "use strict"
 
+let titleProject = document.getElementsByTagName('h1');
+console.log(titleProject[0]);
+let calculateButton = document.getElementsByClassName('handler_btn');
+console.log(calculateButton[0]);
+let resetButton = document.getElementsByClassName('handler_btn');
+console.log(resetButton[1]);
+let plusButton = document.querySelector('.screen-btn');
+console.log(plusButton);
+const percentItems = document.querySelectorAll('.other-items.percent');
+console.log(percentItems);
+const numberItems = document.querySelectorAll('.other-items.number');
+console.log(numberItems);
+let inputTypeRange = document.querySelector('.rollback input[type="range"]');
+console.log(inputTypeRange);
+const rangeValueElement = document.querySelector('.rollback .range-value');
+console.log(rangeValueElement);
+let totalInputs = document.getElementsByClassName('total-input');
+console.log(totalInputs);
+let screens = document.querySelectorAll('.screen');
+console.log(screens);
+
+
 const appData = {
   title: " ",
   screens: [],
