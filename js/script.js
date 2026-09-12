@@ -1,109 +1,139 @@
-// 1. Восстановить порядок книг в aside.
-const booksContainer = document.querySelector('.books');
-const books = Array.from(booksContainer.querySelectorAll('.book'));
+"use strict"
 
-books.sort((a, b) => {
-  const titleA = a.querySelector('h2').textContent.trim();
-  const titleB = b.querySelector('h2').textContent.trim();
-  
-  const numA = parseInt(titleA.match(/\d+/)[0]);
-  const numB = parseInt(titleB.match(/\d+/)[0]);
-  
-  return numA - numB;
-});
+let titleProject = document.getElementsByTagName('h1');
+console.log(titleProject[0]);
+let calculateButton = document.getElementsByClassName('handler_btn');
+console.log(calculateButton[0]);
+let resetButton = document.getElementsByClassName('handler_btn');
+console.log(resetButton[1]);
+let plusButton = document.querySelector('.screen-btn');
+console.log(plusButton);
+const percentItems = document.querySelectorAll('.other-items.percent');
+console.log(percentItems);
+const numberItems = document.querySelectorAll('.other-items.number');
+console.log(numberItems);
+let inputTypeRange = document.querySelector('.rollback input[type="range"]');
+console.log(inputTypeRange);
+const rangeValueElement = document.querySelector('.rollback .range-value');
+console.log(rangeValueElement);
+let totalInputs = document.getElementsByClassName('total-input');
+console.log(totalInputs);
+let screens = document.querySelectorAll('.screen');
+console.log(screens);
 
-booksContainer.innerHTML = '';
-books.forEach(book => booksContainer.appendChild(book));
 
-// 2. Заменить картинку заднего фона на другую из папки image
-document.body.style.backgroundImage = "url('image/you-dont-know-js.jpg')";
-document.body.style.backgroundSize = "cover";
-document.body.style.backgroundRepeat = "no-repeat";
-document.body.style.backgroundPosition = "center";
+const appData = {
+  title: " ",
+  screens: [],
+  screenPrice: 0,
+  adaptive: true,
+  rollback: 10,
+  allServicePrices: 0,
+  fullPrice: 0,
+  servicePercentPrice: 0,
+  services: {},
 
-// 3. Исправить заголовок в книге 3
-const book3 = books.find(book => book.querySelector('h2').textContent.includes('Книга 3'));
-if (book3) {
-  const h2 = book3.querySelector('h2');
-  h2.innerHTML = `
-            <a href="${h2.querySelector('a').href}"
-               target="_blank">Книга 3. this и Прототипы Объектов</a></h2>`;
-}
+  start: function () {
+    appData.asking()
+    appData.addPrices()
+    appData.getFullPrice()
+    appData.getServicePercentPrice()
+    appData.getTitle()
 
-// 4. Удалить рекламу со страницы
-const promo = document.querySelector('.adv');
-if (promo) {
-  promo.remove();
-}
+    appData.logger()
+  },
+  isPureNumber: function (str) {
+    return /^\d+$/.test(str);
+  },
+  validateString: function (str) {
+    if (!str || str.trim() === "") return false;
+    if (appData.isPureNumber(str.trim())) return false;
+    return true;
+  },
+  validateNumber: function (str) {
+    return !isNaN(parseFloat(str)) && isFinite(str) && str.trim() !== "";
+  },
+  asking: function () {
+    let titleInput;
+    do {
+      titleInput = prompt("Как называется Ваш проект?", "Калькулятор верстки");
+    } while (!appData.validateString(titleInput));
 
-// 5. Восстановить порядок глав во второй и пятой книге
-
-const book2 = books.find(book => book.querySelector('h2').textContent.includes('Книга 1'));
-const book5 = books.find(book => book.querySelector('h2').textContent.includes('Книга 5'));
-
-function sortListItems(listElement) {
-  if (!listElement) return;
-  const items = Array.from(listElement.children);
-  items.sort((a, b) => {
-    const extractNum = (text) => {
-      const match = text.match(/(Глава|Приложение|Предисловие|Введение)\s*(\d+|[IVX]+)?/i);
-      if (!match) return 0;
-      
-      const type = match[1].toLowerCase();
-      const numStr = match[2];
-      
-      let num = 0;
-      if (numStr && /^[IVX]+$/.test(numStr)) {
-         num = 0;
-      } else if (numStr) {
-         num = parseInt(numStr);
-      } else {
-         return -1; 
-      }
-      
-      const typeOrder = { 'введение': 0, 'предисловие': 1, 'приложение': 2, 'глава': 3 };
-      return typeOrder[type] !== undefined ? typeOrder[type] : 99;
-    };
+    appData.title = titleInput.trim();
     
-    const textA = a.textContent.trim();
-    const textB = b.textContent.trim();
-    
-    const valA = extractNum(textA);
-    const valB = extractNum(textB);
-    
-    if (valA === valB) {
-       const numA = parseFloat(textA.match(/\d+/)?.[0]) || 0;
-       const numB = parseFloat(textB.match(/\d+/)?.[0]) || 0;
-       return numA - numB;
+    for (let i = 0; i < 2; i++) {
+      let nameInput;
+      do {
+        nameInput = prompt(`Какие типы экранов нужно разработать? (Экран ${i + 1})`);
+      } while (!appData.validateString(nameInput));
+
+      let priceInput;
+      let price = 0;
+      do {
+        priceInput = prompt(`Сколько будет стоить данная работа? (Экран ${i + 1})`);
+      } while (!appData.validateNumber(priceInput));
+      
+      price = +priceInput;
+
+      appData.screens.push({ id: i, name: nameInput, price: price });
     }
-    
-    return valA - valB;
-  });
-  
-  listElement.innerHTML = '';
-  items.forEach(item => listElement.appendChild(item));
+
+    for (let i = 0; i < 2; i++) {
+      let serviceNameInput;
+      do {
+        serviceNameInput = prompt(`Какой дополнительный тип услуги нужен? (Услуга ${i + 1})`);
+      } while (!appData.validateString(serviceNameInput));
+
+      let servicePriceInput;
+      let servicePrice = 0;
+      do {
+        servicePriceInput = prompt(`Сколько это будет стоить? (Услуга ${i + 1})`);
+      } while (!appData.validateNumber(servicePriceInput));
+      
+      servicePrice = +servicePriceInput;
+
+      appData.services[serviceNameInput] = servicePrice;
+    }
+
+    appData.adaptive = confirm("Нужен ли адаптив на сайте?");
+  },  
+  addPrices: function() {
+        for (let screen of appData.screens) {
+      appData.screenPrice += +screen.price
+    }
+
+    for (let key in appData.services) {
+      appData.allServicePrices += appData.services[key]
+    }
+  },
+  getFullPrice: function () {
+    appData.fullPrice = +appData.screenPrice + appData.allServicePrices
+  },
+  getServicePercentPrice: function () {
+    appData.servicePercentPrice = appData.fullPrice - (appData.fullPrice * (appData.rollback / 100))
+  },
+  getTitle: function () {
+    appData.title =
+      appData.title.trim()[0].toUpperCase() +
+      appData.title.trim().slice(1).toLowerCase()
+  },
+  getRollbackMessage: function (price) {
+    if (price >= 30000) {
+      return "Даем скидку в 10%"
+    } else if (price >= 15000 && price < 30000) {
+      return "Даем скидку в 5%"
+    } else if (price >= 0 && price < 15000) {
+      return "Скидка не предусмотрена"
+    } else {
+      return "Что то пошло не так"
+    }
+  },
+  logger: function () {
+    console.log(appData.fullPrice); 
+    console.log(appData.servicePercentPrice);
+    console.log(appData.screens);
+    console.log(appData.services);
+  },
 }
 
-if (book2) {
-  sortListItems(book2.querySelector('ul'));
-}
-if (book5) {
-  sortListItems(book5.querySelector('ul'));
-}
-
-// 6. В шестой книге добавить главу “Глава 8: За пределами ES6” и поставить её в правильное место
-const book6 = books.find(book => book.querySelector('h2').textContent.includes('Книга 6'));
-if (book6) {
-  const ul = book6.querySelector('ul');
-  const newChapter = document.createElement('li');
-  newChapter.textContent = 'Глава 8: За пределами ES6';
-  
-  const appendixA = book6.querySelector('li').parentElement.querySelector('li').nextElementSibling; 
-  const appendixATarget = Array.from(ul.children).find(li => li.textContent.includes('Приложение A'));
-  
-  if (appendixATarget) {
-    ul.insertBefore(newChapter, appendixATarget);
-  } else {
-    ul.appendChild(newChapter);
-  }
-}
+appData.start()
