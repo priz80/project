@@ -24,7 +24,6 @@ let screens = document.querySelectorAll(".screen");
 const cmsOpenCheckbox = document.getElementById("cms-open");
 const hiddenCmsVariants = document.querySelector(".hidden-cms-variants");
 const cmsSelect = document.getElementById("cms-select");
-// блок-обёртка, которому нужно переключать display, и сам текстовый input внутри него
 const cmsOtherWrapper = hiddenCmsVariants.querySelector(".main-controls__input");
 const cmsOtherInput = document.getElementById("cms-other-input");
 
@@ -45,34 +44,25 @@ const appData = {
   cmsPercent: 0,
   cmsPrice: 0,
 
-  // ----- методы объекта (обычные функции, чтобы this === appData) -----
-
   init() {
     this.addTitle();
     this.setupRangeSlider();
     this.setupCmsToggle();
     this.setupCmsSelect();
 
-    // синхронизируем rollback со значением слайдера в разметке (value="0")
     this.rollback = +inputTypeRange.value;
 
-    // кнопка "Сброс" изначально скрыта (в разметке уже стоит display:none,
-    // но дублируем на случай других состояний верстки)
     resetButton.style.display = "none";
     hiddenCmsVariants.style.display = "none";
     cmsOtherWrapper.style.display = "none";
 
-    // при использовании ссылки на метод объекта в качестве обработчика
-    // контекст теряется, поэтому явно привязываем appData через bind
     calculateButton.addEventListener("click", this.start.bind(this));
     resetButton.addEventListener("click", this.reset.bind(this));
     plusButton.addEventListener("click", this.addScreenBlock.bind(this));
   },
 
   setupCmsToggle() {
-    // стрелочная функция — this внутри неё это appData (лексически из init)
     cmsOpenCheckbox.addEventListener("change", () => {
-      // по заданию именно display: flex, а не display: block
       hiddenCmsVariants.style.display = cmsOpenCheckbox.checked ? "flex" : "none";
     });
   },
@@ -88,8 +78,6 @@ const appData = {
   },
 
   setupRangeSlider() {
-    // стрелочная функция наследует this из setupRangeSlider (appData),
-    // поэтому bind здесь не требуется
     inputTypeRange.addEventListener("input", (event) => {
       const val = event.target.value;
       rangeValueElement.textContent = val + "%";
@@ -178,8 +166,7 @@ const appData = {
     this.addCmsPercent();
   },
 
-  // берём процент из select (WordPress = value самой option),
-  // либо, если выбрано "Другое", из ручного ввода в cms-other-input
+
   addCmsPercent() {
     this.cmsPercent = 0;
 
@@ -200,7 +187,6 @@ const appData = {
   addScreenBlock() {
     const cloneScreen = screens[0].cloneNode(true);
 
-    // на случай если клонируется уже заблокированный блок
     cloneScreen.querySelector("select").disabled = false;
     cloneScreen.querySelector("input").disabled = false;
 
@@ -231,15 +217,12 @@ const appData = {
 
     this.fullPrice = +this.screenPrice + this.servicePricesNumber + this.servicePricesPercent;
 
-    // CMS-вариант (например WordPress, value="50") — это процент,
-    // который ДОБАВЛЯЕТСЯ к уже посчитанной общей стоимости работы
     this.cmsPrice = this.fullPrice * (this.cmsPercent / 100);
     this.fullPrice += this.cmsPrice;
 
     this.fullPriceWithRollback = this.fullPrice - this.fullPrice * (this.rollback / 100);
   },
 
-  // ----- блокировка / разблокировка левой части и переключение кнопок -----
 
   lockInputs() {
     const leftSideControls = document.querySelectorAll(
@@ -275,7 +258,6 @@ const appData = {
     }
   },
 
-  // ----- сброс всего приложения в исходное состояние -----
 
   reset() {
     const allScreens = document.querySelectorAll(".screen");
@@ -308,7 +290,6 @@ const appData = {
     inputTypeRange.value = inputTypeRange.defaultValue;
     rangeValueElement.textContent = inputTypeRange.defaultValue + "%";
 
-    // возвращаем блок с CMS в исходное состояние
     cmsOpenCheckbox.checked = false;
     hiddenCmsVariants.style.display = "none";
 
