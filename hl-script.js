@@ -1,4 +1,3 @@
-// Функция-конструктор DomElement (из задания №1)
 function DomElement(selector, height, width, bg, fontSize) {
   this.selector = selector;
   this.height = height;
@@ -36,18 +35,15 @@ function DomElement(selector, height, width, bg, fontSize) {
   };
 }
 
-// Шаг 2: создаём квадрат только после DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function () {
   const squareObj = new DomElement('#square', '100px', '100px', 'coral', '16px');
   const square = squareObj.render();
 
-  // квадрату нужен position: absolute и стартовые координаты
   square.style.position = 'absolute';
   square.style.top = '0px';
   square.style.left = '0px';
 
-  // Шаг 3: обработчик keydown, принимающий callback-функцию
-  const step = 10; // шаг перемещения в пикселях
+  const step = 10;
 
   function addKeydownHandler(callback) {
     document.addEventListener('keydown', callback);
