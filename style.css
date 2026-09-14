@@ -1,3 +1,18 @@
 body {
     box-sizing: border-box;
+    background-color: black;
+}
+
+.content {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.content::before {
+    content: 'Lesson 17';
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
 }
